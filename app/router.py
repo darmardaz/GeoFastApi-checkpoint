@@ -1,13 +1,15 @@
 from typing import List
+
 from fastapi import APIRouter, HTTPException
+
 from . import schemas, crud
 
 router = APIRouter()
 
 
 @router.post("/check-voiv/")
-async def read_voivodeships(payload: schemas.Coordinates):
-    voivodeship = await crud.get_voivodeship(payload.lat, payload.lng)
+async def read_voivodeship(payload: schemas.Coordinates):
+    voivodeship = await crud.get_voivodeship_by_point_coordinates(payload.lat, payload.lng)
     if voivodeship is None:
         raise HTTPException(status_code=404, detail="Point outside of Poland")
     return {'voivodeship': voivodeship.get('name')}
@@ -19,15 +21,17 @@ async def read_events(skip: int = 0, limit: int = 10):
     return events
 
 
-@router.post("/create-event/", response_model=schemas.EventBase)
-async def create_events(payload: schemas.EventCreate):
+@router.post("/create-event/", response_model=schemas.EventBase, status_code=201)
+async def create_event(payload: schemas.EventCreate):
     event = await crud.create_event(payload)
+    if event is None:
+        raise HTTPException(status_code=400, detail="Event outside of Poland")
     return event
 
 
-@router.post("/event/{event_id}", response_model=schemas.EventBase)
-async def create_events(event_id: int):
+@router.get("/event/{event_id}", response_model=schemas.EventBase)
+async def read_event(event_id: int):
     event = await crud.get_event(event_id)
     if event is None:
-        raise HTTPException(status_code=404, detail="User not found")
+        raise HTTPException(status_code=404, detail="Event not found")
     return event

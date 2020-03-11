@@ -3,7 +3,7 @@ from geoalchemy2 import WKTElement
 from . import models, database, schemas
 
 
-async def get_voivodeship(lat: int, lng: int):
+async def get_voivodeship_by_point_coordinates(lat: int, lng: int):
     point = WKTElement(f'POINT({lat} {lng})', srid=4326)
     query = models.voivodeships.select().where(
         models.voivodeships.c.area.ST_contains(point)
@@ -48,7 +48,9 @@ async def get_event(event_id: int):
 
 
 async def create_event(event: schemas.EventCreate):
-    voivodeship = await get_voivodeship(lat=event.lat, lng=event.lng)
+    voivodeship = await get_voivodeship_by_point_coordinates(lat=event.lat, lng=event.lng)
+    if voivodeship is None:
+        return
     query = models.events.insert().values(
         name=event.name,
         description=event.description,

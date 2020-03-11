@@ -11,3 +11,7 @@ Run alembic migrations:
 Import voivodeships polygons from json
 
 `docker-compose exec web python load_voivodeships.py`
+
+To run tests:
+
+`docker-compose exec web pytest`
