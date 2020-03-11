@@ -1,0 +1,13 @@
+# FastApi app
+### After build
+Create postgresql postgis extension:
+
+`docker-compose exec db psql -U postgres -c "CREATE EXTENSION postgis;"`
+
+Run alembic migrations:
+
+`docker-compose exec web alembic upgrade head`
+
+Import voivodeships polygons from json
+
+`docker-compose exec web python load_voivodeships.py`
