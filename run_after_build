@@ -1,0 +1,5 @@
+#!/bin/bash
+docker-compose exec db psql -U postgres -c "CREATE EXTENSION postgis;"
+docker-compose exec web alembic upgrade head
+docker-compose exec web python load_voivodeships.py
+docker-compose exec web pytest

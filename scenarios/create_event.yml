@@ -1,0 +1,15 @@
+config:
+  target: "http://127.0.0.1:8000"
+  phases:
+    - duration: 30
+      arrivalRate: 10
+scenarios:
+  - flow:
+    - post:
+        url: "/api/event/"
+        json:
+          name: "text"
+          description: "text"
+          lat: "16"
+          lng: "52"
+

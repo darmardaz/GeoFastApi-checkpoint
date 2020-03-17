@@ -1,0 +1,13 @@
+config:
+  target: "http://127.0.0.1:8000"
+  phases:
+    - duration: 30
+      arrivalRate: 10
+scenarios:
+  - flow:
+    - post:
+        url: "/api/check-voiv/"
+        json:
+          lat: "16"
+          lng: "52"
+
